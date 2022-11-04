@@ -24,22 +24,22 @@ import { StatefulContainer } from './stateful-container';
 import type { StatefulDataTableProps } from './types';
 import { LocaleContext } from '../locale';
 
-function useResizeObserver(
-  ref: {
-    current: HTMLElement | null;
-  },
-  callback: (b: ResizeObserverEntry[], a: ResizeObserver) => unknown
-) {
-  React.useLayoutEffect(() => {
-    if (__BROWSER__) {
-      if (ref.current) {
-        const observer = new ResizeObserver(callback);
-        observer.observe(ref.current);
-        return () => observer.disconnect();
-      }
-    }
-  }, [ref]);
-}
+// function useResizeObserver(
+//   ref: {
+//     current: HTMLElement | null;
+//   },
+//   callback: (b: ResizeObserverEntry[], a: ResizeObserver) => unknown
+// ) {
+//   React.useLayoutEffect(() => {
+//     if (__BROWSER__) {
+//       if (ref.current) {
+//         const observer = new ResizeObserver(callback);
+//         observer.observe(ref.current);
+//         return () => observer.disconnect();
+//       }
+//     }
+//   }, [ref]);
+// }
 
 function QueryInput(props) {
   const [css, theme] = useStyletron();
@@ -147,10 +147,11 @@ function FilterTag(props) {
 export function StatefulDataTable(props: StatefulDataTableProps) {
   const [css, theme] = useStyletron();
   const headlineRef = React.useRef(null);
-  const [headlineHeight, setHeadlineHeight] = React.useState(64);
-  useResizeObserver(headlineRef, (entries) => {
-    setHeadlineHeight(entries[0].contentRect.height);
-  });
+  const [headlineHeight] = React.useState(64);
+  // const [headlineHeight, setHeadlineHeight] = React.useState(64);
+  // useResizeObserver(headlineRef, (entries) => {
+  //   setHeadlineHeight(entries[0].contentRect.height);
+  // });
 
   const filterable = props.filterable === undefined ? true : props.filterable;
   const searchable = props.searchable === undefined ? true : props.searchable;
