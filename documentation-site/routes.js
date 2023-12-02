@@ -68,6 +68,10 @@ const routes = [
             itemId: '/components/button',
           },
           {
+            title: 'ButtonDock',
+            itemId: '/components/button-dock',
+          },
+          {
             title: 'Button Group',
             itemId: '/components/button-group',
           },
@@ -104,12 +108,20 @@ const routes = [
             itemId: '/components/pin-code',
           },
           {
+            title: 'Segmented Control',
+            itemId: '/components/segmented-control',
+          },
+          {
             title: 'Radio',
             itemId: '/components/radio',
           },
           {
             title: 'Slider',
             itemId: '/components/slider',
+          },
+          {
+            title: 'Stepper',
+            itemId: '/components/stepper',
           },
           {
             title: 'Textarea',
@@ -159,6 +171,10 @@ const routes = [
         title: 'Navigation',
         subNav: [
           {
+            title: 'Bottom Navigation',
+            itemId: '/components/bottom-navigation',
+          },
+          {
             title: 'Breadcrumbs',
             itemId: '/components/breadcrumbs',
           },
@@ -173,6 +189,14 @@ const routes = [
           {
             title: 'Link',
             itemId: '/components/link',
+          },
+          {
+            title: 'Mobile Header',
+            itemId: '/components/mobile-header',
+          },
+          {
+            title: 'Page Control',
+            itemId: '/components/page-control',
           },
           {
             title: 'Pagination',
@@ -242,6 +266,10 @@ const routes = [
           {
             title: 'Tag',
             itemId: '/components/tag',
+          },
+          {
+            title: 'Tile',
+            itemId: '/components/tile',
           },
           {
             title: 'Tree View',
@@ -350,6 +378,10 @@ const routes = [
           {
             title: 'Floating Marker',
             itemId: '/components/floating-marker',
+          },
+          {
+            title: 'Floating Route Marker',
+            itemId: '/components/floating-route-marker',
           },
           {
             title: 'Location Puck',

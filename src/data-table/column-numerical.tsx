@@ -16,6 +16,7 @@ import { COLUMNS, NUMERICAL_FORMATS, MAX_BIN_COUNT, HISTOGRAM_SIZE } from './con
 import FilterShell, { type ExcludeKind } from './filter-shell';
 import type { ColumnOptions, SharedColumnOptions } from './types';
 import { LocaleContext } from '../locale';
+// @ts-ignore
 import { bin, max as maxFunc, extent, scaleLinear, median, bisector } from 'd3';
 import { Slider } from '../slider';
 
@@ -45,6 +46,7 @@ function roundToFixed(value: number, precision: number) {
   return Math.round(value * k) / k;
 }
 
+// @ts-ignore
 function format(value: number, options) {
   if (typeof options.format === 'function') {
     return options.format(value);
@@ -72,18 +74,23 @@ function format(value: number, options) {
   return formatted;
 }
 
+// @ts-ignore
 function validateInput(input) {
   return Boolean(parseFloat(input)) || input === '' || input === '-';
 }
 
+// @ts-ignore
 const bisect = bisector((d) => d.x0);
 
 type HistogramProps = {
+  // @ts-ignore
   data;
   lower: number;
   upper: number;
   isRange: boolean;
+  // @ts-ignore
   exclude;
+  // @ts-ignore
   precision;
 };
 
@@ -103,11 +110,13 @@ const Histogram = React.memo<any>(function Histogram({
     const bins = bin().thresholds(Math.min(data.length, MAX_BIN_COUNT))(data);
 
     const xScale = scaleLinear()
+      // @ts-expect-error todo(ts-migration) TS2345 Argument of type '(number | undefined)[]' is not assignable to parameter of type 'Iterable<NumberValue>'.
       .domain([bins[0].x0, bins[bins.length - 1].x1])
       .range([0, HISTOGRAM_SIZE.width])
       .clamp(true);
 
     const yScale = scaleLinear()
+      // @ts-ignore
       .domain([0, maxFunc(bins, (d) => d.length)])
       .nice()
       .range([HISTOGRAM_SIZE.height, 0]);
@@ -135,9 +144,12 @@ const Histogram = React.memo<any>(function Histogram({
       })}
     >
       <svg {...HISTOGRAM_SIZE}>
+        {/* @ts-ignore */}
         {bins.map((d, index) => {
+          // @ts-expect-error todo(ts-migration) TS2345 Argument of type 'number | undefined' is not assignable to parameter of type 'NumberValue'.
           const x = xScale(d.x0) + 1;
           const y = yScale(d.length);
+          // @ts-expect-error todo(ts-migration) TS2345 Argument of type 'number | undefined' is not assignable to parameter of type 'NumberValue'.
           const width = Math.max(0, xScale(d.x1) - xScale(d.x0) - 1);
           const height = yScale(0) - yScale(d.length);
 
@@ -145,7 +157,9 @@ const Histogram = React.memo<any>(function Histogram({
           if (singleIndexNearest != null) {
             included = index === singleIndexNearest;
           } else {
+            // @ts-expect-error todo(ts-migration) TS18048 'd.x1' is possibly 'undefined'.
             const withinLower = d.x1 > lower;
+            // @ts-expect-error todo(ts-migration) TS18048 'd.x0' is possibly 'undefined'.
             const withinUpper = d.x0 <= upper;
             included = withinLower && withinUpper;
           }
@@ -157,7 +171,9 @@ const Histogram = React.memo<any>(function Histogram({
           return (
             <rect
               key={`bar-${index}`}
-              fill={included ? theme.colors.primary : theme.colors.mono400}
+              fill={
+                included ? theme.colors.backgroundInversePrimary : theme.colors.backgroundSecondary
+              }
               x={x}
               y={y}
               width={width}
@@ -170,6 +186,7 @@ const Histogram = React.memo<any>(function Histogram({
   );
 });
 
+// @ts-ignore
 function NumericalFilter(props) {
   const [css, theme] = useStyletron();
   const locale = React.useContext(LocaleContext);
@@ -238,9 +255,11 @@ function NumericalFilter(props) {
     // once the user is done inputting.
     // we validate then format to the given precision
     let l = isRange ? lv : sv;
+    // @ts-expect-error todo(ts-migration) TS2322 Type 'string | number | undefined' is not assignable to type 'number'.
     l = validateInput(l) ? l : min;
     let h = validateInput(uv) ? uv : max;
 
+    // @ts-expect-error todo(ts-migration) TS2345 Argument of type 'string | number | undefined' is not assignable to parameter of type 'number'.
     return [roundToFixed(l, precision), roundToFixed(h, precision)];
   }, [isRange, focused, sv, lv, uv, precision]);
 
@@ -249,6 +268,7 @@ function NumericalFilter(props) {
   const sliderScale = React.useMemo(
     () =>
       scaleLinear()
+        // @ts-expect-error todo(ts-migration) TS2345 Argument of type '(string | undefined)[]' is not assignable to parameter of type 'Iterable<NumberValue>'.
         .domain([min, max])
         .rangeRound([1, MAX_BIN_COUNT])
         // We clamp the values within our min and max even if a user enters a huge number
@@ -377,7 +397,7 @@ function NumericalFilter(props) {
                   return {
                     // For range selection we use the color as is, but when selecting the single value,
                     // we don't want the track standing out, so mute its color
-                    background: theme.colors.mono400,
+                    background: theme.colors.backgroundSecondary,
                   };
                 }
               },
@@ -402,6 +422,7 @@ function NumericalFilter(props) {
           justifyContent: 'space-between',
         })}
       >
+        {/* @ts-expect-error todo(ts-migration) TS2769 No overload matches this call. */}
         <Input
           min={min}
           max={max}
@@ -421,6 +442,7 @@ function NumericalFilter(props) {
           onBlur={() => setFocus(false)}
         />
         {isRange && (
+          // @ts-expect-error todo(ts-migration) TS2769 No overload matches this call.
           <Input
             min={min}
             max={max}
@@ -445,6 +467,7 @@ function NumericalFilter(props) {
   );
 }
 
+// @ts-ignore
 function NumericalCell(props) {
   const [css, theme] = useStyletron();
   return (
@@ -453,6 +476,7 @@ function NumericalCell(props) {
         ...theme.typography.MonoParagraphXSmall,
         display: 'flex',
         justifyContent: theme.direction !== 'rtl' ? 'flex-end' : 'flex-start',
+        // @ts-ignore
         color: props.highlight(props.value) ? theme.colors.contentNegative : null,
         width: '100%',
       })}

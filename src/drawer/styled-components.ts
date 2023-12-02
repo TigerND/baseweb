@@ -20,7 +20,9 @@ function getSizeStyles($size: SizeProp, $anchor: AnchorProp) {
   if ($anchor === ANCHOR.left || $anchor === ANCHOR.right) {
     // If the anchor is horizontal, set the width
     styles.height = SIZE_DIMENSION.full;
+    // @ts-ignore
     if (SIZE[$size]) {
+      // @ts-ignore
       styles.width = SIZE_DIMENSION[$size];
     } else if (typeof $size === 'string') {
       styles.width = $size;
@@ -28,7 +30,9 @@ function getSizeStyles($size: SizeProp, $anchor: AnchorProp) {
   } else {
     // If the anchor is vertical, set the height
     styles.width = SIZE_DIMENSION.full;
+    // @ts-ignore
     if (SIZE[$size]) {
+      // @ts-ignore
       styles.height = SIZE_DIMENSION[$size];
     } else if (typeof $size === 'string') {
       styles.height = $size;
@@ -44,33 +48,33 @@ function getAnchorStyles(props: SharedStylePropsArg) {
   switch ($anchor) {
     case right: {
       return {
-        transform: $isVisible ? 'translateX(0)' : `translateX(${sizeStyles.width})`,
-        right: $isVisible ? 0 : `-${sizeStyles.width}`,
+        transform: $isVisible ? 'translateX(0)' : 'translateX(100%)',
+        right: $isVisible ? 0 : '-100%',
         top: 0,
         ...sizeStyles,
       };
     }
     case left: {
       return {
-        transform: $isVisible ? 'translateX(0)' : `translateX(-${sizeStyles.width})`,
-        left: $isVisible ? 0 : `-${sizeStyles.width}`,
+        transform: $isVisible ? 'translateX(0)' : `translateX(-100%)`,
+        left: $isVisible ? 0 : '-100%',
         top: 0,
         ...sizeStyles,
       };
     }
     case bottom: {
       return {
-        transform: $isVisible ? 'translateY(0)' : `translateY(${sizeStyles.height})`,
+        transform: $isVisible ? 'translateY(0)' : 'translateY(100%)',
         left: 0,
-        bottom: $isVisible ? '0' : `-${sizeStyles.height}`,
+        bottom: $isVisible ? '0' : `-100%`,
         ...sizeStyles,
       };
     }
     case top: {
       return {
-        transform: $isVisible ? 'translateY(0)' : `translateY(-${sizeStyles.height})`,
+        transform: $isVisible ? 'translateY(0)' : 'translateY(-100%)',
         left: 0,
-        top: $isVisible ? '0' : `-${sizeStyles.height}`,
+        top: $isVisible ? '0' : '-100%',
         ...sizeStyles,
       };
     }
@@ -120,6 +124,7 @@ export const StyledBackdrop = styled<'div', SharedStylePropsArg>('div', (props) 
 
 StyledBackdrop.displayName = 'StyledBackdrop';
 
+// @ts-ignore
 export const StyledDrawerContainer = styled<'div', SharedStylePropsArg>('div', (props) => {
   const { $animating, $isOpen, $isVisible, $theme } = props;
   return {
@@ -171,7 +176,7 @@ export const StyledClose = styled<'button', SharedStylePropsArg>('button', (prop
     paddingBottom: 0,
 
     // colors
-    fill: $theme.colors.primary,
+    fill: $theme.colors.contentPrimary,
     transitionProperty: 'fill, border-color',
     transitionDuration: $theme.animation.timing200,
     borderLeftWidth: '1px',
@@ -187,10 +192,10 @@ export const StyledClose = styled<'button', SharedStylePropsArg>('button', (prop
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     ':hover': {
-      fill: $theme.colors.primary600,
+      fill: $theme.colors.gray600,
     },
     ':focus': {
-      outline: $isFocusVisible ? `3px solid ${$theme.colors.accent}` : 'none',
+      outline: $isFocusVisible ? `3px solid ${$theme.colors.borderAccent}` : 'none',
     },
 
     // Positioning

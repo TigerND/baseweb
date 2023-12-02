@@ -5,6 +5,7 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 */
 import * as React from 'react';
+// @ts-ignore
 import memoize from 'memoize-one';
 // Files
 import { LocaleContext } from '../locale';
@@ -14,7 +15,7 @@ import { Button, KIND } from '../button';
 import { StyledRoot, StyledMaxLabel, StyledDropdownContainer } from './styled-components';
 import ChevronLeft from '../icon/chevron-left';
 import ChevronRight from '../icon/chevron-right';
-import { getOverrides } from '../helpers/overrides';
+import { getOverrides, mergeOverrides } from '../helpers/overrides';
 import type { PaginationProps } from './types';
 import type { Locale } from '../locale';
 import { isFocusVisible, forkFocus, forkBlur } from '../utils/focusVisible';
@@ -53,6 +54,7 @@ export default class Pagination extends React.PureComponent<
   getMenuOptions = memoize((numPages: number) => {
     const menuOptions = [];
     for (let i = 1; i <= numPages; i++) {
+      // @ts-ignore
       menuOptions.push({ label: i });
     }
     return menuOptions;
@@ -109,6 +111,61 @@ export default class Pagination extends React.PureComponent<
     );
     const [Select, selectProps] = getOverrides(overrides.Select, BaseSelect);
 
+    const defaultSelectOverrides = {
+      ControlContainer: {
+        // @ts-ignore
+        style: ({ $theme, $disabled, $isOpen, $error }) => ({
+          borderLeftColor: 'transparent',
+          borderRightColor: 'transparent',
+          borderTopColor: 'transparent',
+          borderBottomColor: 'transparent',
+          boxShadow: 'none',
+          backgroundColor: $disabled
+            ? $theme.colors.buttonDisabledFill
+            : $isOpen
+            ? $theme.colors.buttonTertiaryHover
+            : $error
+            ? $theme.colors.backgroundLightNegative
+            : $theme.colors.buttonTertiaryFill,
+          ':hover': {
+            backgroundColor: $theme.colors.buttonTertiaryHover,
+          },
+        }),
+      },
+      InputContainer: {
+        style: {
+          marginLeft: 0,
+        },
+      },
+      ValueContainer: {
+        style: {
+          flexBasis: 'auto',
+        },
+      },
+      SingleValue: {
+        // @ts-ignore
+        style: ({ $theme }) => ({
+          position: 'relative',
+          paddingTop: '0',
+          paddingBottom: '0',
+          paddingLeft: $theme.sizing.scale200,
+          paddingRight: $theme.sizing.scale500,
+          color: $theme.colors.buttonTertiaryText,
+          ...$theme.typography.font350,
+          lineHeight: 'unset',
+        }),
+      },
+      SelectArrow: {
+        // @ts-ignore
+        style: ({ $theme }) => ({
+          width: '24px',
+          height: '24px',
+          color: $theme.colors.buttonTertiaryText,
+        }),
+      },
+    };
+    selectProps.overrides = mergeOverrides(defaultSelectOverrides, selectProps.overrides);
+
     const options = this.getMenuOptions(numPages);
 
     return (
@@ -136,9 +193,11 @@ export default class Pagination extends React.PureComponent<
                     BaseButton: overrides.PrevButton,
                   }}
                   size={size}
+                  type="button"
                 >
                   {labels && labels.prevButton ? labels.prevButton : locale.pagination.prev}
                 </Button>
+
                 <DropdownContainer
                   $isFocusVisible={this.state.isFocusVisible}
                   {...dropdownContainerProps}
@@ -156,59 +215,10 @@ export default class Pagination extends React.PureComponent<
                     value={[{ label: currentPage }]}
                     maxDropdownHeight="200px"
                     size={size}
-                    overrides={{
-                      ControlContainer: {
-                        style: ({ $theme, $disabled, $isOpen, $error }) => ({
-                          borderLeftColor: 'transparent',
-                          borderRightColor: 'transparent',
-                          borderTopColor: 'transparent',
-                          borderBottomColor: 'transparent',
-                          boxShadow: 'none',
-                          backgroundColor: $disabled
-                            ? $theme.colors.buttonDisabledFill
-                            : $isOpen
-                            ? $theme.colors.buttonTertiaryHover
-                            : $error
-                            ? $theme.colors.negative50
-                            : $theme.colors.buttonTertiaryFill,
-                          ':hover': {
-                            backgroundColor: $theme.colors.buttonTertiaryHover,
-                          },
-                        }),
-                      },
-                      InputContainer: {
-                        style: {
-                          marginLeft: 0,
-                        },
-                      },
-                      ValueContainer: {
-                        style: {
-                          flexBasis: 'auto',
-                        },
-                      },
-                      SingleValue: {
-                        style: ({ $theme }) => ({
-                          position: 'relative',
-                          paddingTop: '0',
-                          paddingBottom: '0',
-                          paddingLeft: $theme.sizing.scale200,
-                          paddingRight: $theme.sizing.scale500,
-                          color: $theme.colors.buttonTertiaryText,
-                          ...$theme.typography.font350,
-                          lineHeight: 'unset',
-                        }),
-                      },
-                      SelectArrow: {
-                        style: ({ $theme }) => ({
-                          width: '24px',
-                          height: '24px',
-                          color: $theme.colors.buttonTertiaryText,
-                        }),
-                      },
-                    }}
                     {...selectProps}
                   />
                 </DropdownContainer>
+
                 <MaxLabel {...maxLabelProps} aria-hidden={true}>
                   {`${
                     labels && labels.preposition
@@ -232,6 +242,7 @@ export default class Pagination extends React.PureComponent<
                     BaseButton: overrides.NextButton,
                   }}
                   size={size}
+                  type="button"
                 >
                   {labels && labels.nextButton ? labels.nextButton : locale.pagination.next}
                 </Button>

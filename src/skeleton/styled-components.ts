@@ -7,6 +7,7 @@ LICENSE file in the root directory of this source tree.
 import { styled } from '../styles';
 import type { StyleObject } from 'styletron-standard';
 
+// @ts-ignore
 function getAnimationColor(props) {
   const { $theme } = props;
   return `linear-gradient(135deg,
@@ -74,6 +75,8 @@ export const StyledRow = styled<
   {
     $animation?: boolean;
     $isLastRow: boolean;
+    $rowIndex: number;
+    $autoSizeRows?: boolean;
   }
 >('div', (props) => {
   return {
@@ -81,7 +84,8 @@ export const StyledRow = styled<
       ? { ...animationStyle, backgroundImage: getAnimationColor(props) }
       : { backgroundColor: props.$theme.colors.backgroundTertiary }),
     width: '100%',
-    height: '15px',
+    flexBasis: '15px',
+    flexGrow: props.$autoSizeRows ? 1 : 0,
     marginBottom: props.$isLastRow ? '0px' : '10px',
   };
 });

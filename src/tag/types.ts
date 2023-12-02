@@ -14,7 +14,7 @@ export const TagVariant = Object.freeze(VARIANT);
 export const TagSize = Object.freeze(SIZE);
 
 export type TagKind = keyof typeof TagKind;
-export type TagVariant = typeof TagVariant[keyof typeof TagVariant];
+export type TagVariant = (typeof TagVariant)[keyof typeof TagVariant];
 export type TagSize = keyof typeof TagSize;
 
 export type TagOverrides = {
@@ -56,6 +56,7 @@ export type TagProps = {
   /** Determines the size of the Tag. */
   size?: TagSize;
   startEnhancer?: React.ComponentType<{}>;
+  contentMaxWidth?: string | null;
 };
 
 export type SharedPropsArg = {
@@ -70,4 +71,5 @@ export type SharedPropsArg = {
   $variant?: string;
   $isFocusVisible?: boolean;
   $size?: string;
+  $contentMaxWidth?: string | null;
 };

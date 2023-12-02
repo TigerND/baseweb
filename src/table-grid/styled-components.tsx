@@ -44,6 +44,7 @@ export const StyledHeadCell = withStyle<
     $sticky?: boolean;
     $isFocusVisible?: boolean;
   }
+  // @ts-ignore
 >(FlexStyledHeadCell, ({ $sticky = true, $isFocusVisible, $theme }) => {
   return {
     backgroundColor: $theme.colors.tableHeadBackgroundColor,
@@ -52,7 +53,7 @@ export const StyledHeadCell = withStyle<
     top: $sticky ? 0 : null,
     width: 'unset',
     ':focus': {
-      outline: $isFocusVisible ? `3px solid ${$theme.colors.accent}` : 'none',
+      outline: $isFocusVisible ? `3px solid ${$theme.colors.borderAccent}` : 'none',
       outlineOffset: '-3px',
     },
     zIndex: $sticky ? 1 : 'auto',
@@ -68,6 +69,7 @@ export const StyledBodyCell = withStyle<
     $gridRow?: string;
     $isFocusVisible?: boolean;
   }
+  // @ts-ignore
 >(FlexStyledBodyCell, (props) => {
   return {
     display: 'block',
@@ -75,7 +77,7 @@ export const StyledBodyCell = withStyle<
     gridColumn: props.$gridColumn || null,
     gridRow: props.$gridRow || null,
     ':focus': {
-      outline: props.$isFocusVisible ? `3px solid ${props.$theme.colors.accent}` : 'none',
+      outline: props.$isFocusVisible ? `3px solid ${props.$theme.colors.borderAccent}` : 'none',
       outlineOffset: '-3px',
     },
   };

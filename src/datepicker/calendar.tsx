@@ -23,6 +23,8 @@ import DateHelpers from './utils/date-helpers';
 import { getOverrides, mergeOverrides } from '../helpers/overrides';
 import type { CalendarProps, CalendarInternalState } from './types';
 import { DENSITY, ORIENTATION } from './constants';
+import { Button, KIND } from '../button';
+import { ButtonDock } from '../button-dock';
 
 export default class Calendar<T = Date> extends React.Component<
   CalendarProps<T>,
@@ -52,6 +54,7 @@ export default class Calendar<T = Date> extends React.Component<
     orientation: ORIENTATION.horizontal,
     overrides: {},
     peekNextMonth: false,
+    // @ts-ignore
     adapter: dateFnsAdapter,
     value: null,
     trapTabbing: false,
@@ -59,18 +62,23 @@ export default class Calendar<T = Date> extends React.Component<
 
   dateHelpers: DateHelpers<T>;
 
+  // @ts-ignore
   calendar: HTMLElement;
 
   constructor(props: CalendarProps<T>) {
     super(props);
 
     const { highlightedDate, value, adapter } = this.props;
+    // @ts-ignore
     this.dateHelpers = new DateHelpers(adapter);
     const dateInView = this.getDateInView();
+    // @ts-ignore
     let time = [];
     if (Array.isArray(value)) {
+      // @ts-ignore
       time = [...value];
     } else if (value) {
+      // @ts-ignore
       time = [value];
     }
     this.state = {
@@ -83,6 +91,7 @@ export default class Calendar<T = Date> extends React.Component<
       date: dateInView,
       quickSelectId: null,
       rootElement: null,
+      // @ts-ignore
       time,
     };
   }
@@ -145,7 +154,9 @@ export default class Calendar<T = Date> extends React.Component<
 
   getDateInView: () => T = () => {
     const { highlightedDate, value } = this.props;
+    // @ts-ignore
     const minDate = this.dateHelpers.getEffectiveMinDate(this.props);
+    // @ts-ignore
     const maxDate = this.dateHelpers.getEffectiveMaxDate(this.props);
     const current = this.dateHelpers.date();
     const initialDate = this.getSingleDate(value) || highlightedDate;
@@ -432,10 +443,13 @@ export default class Calendar<T = Date> extends React.Component<
       const monthSubComponents = [];
       const monthDate = this.dateHelpers.addMonths(this.state.date, i);
       const monthKey = `month-${i}`;
+      // @ts-ignore
       monthSubComponents.push(this.renderCalendarHeader(monthDate, i));
       monthSubComponents.push(
+        // @ts-ignore
         <CalendarContainer
           key={monthKey}
+          // @ts-ignore
           ref={(calendar) => {
             this.calendar = calendar;
           }}
@@ -476,6 +490,7 @@ export default class Calendar<T = Date> extends React.Component<
           />
         </CalendarContainer>
       );
+      // @ts-ignore
       monthList.push(<div key={`month-component-${i}`}>{monthSubComponents}</div>);
     }
     return (
@@ -553,6 +568,7 @@ export default class Calendar<T = Date> extends React.Component<
               <QuickSelect
                 aria-label={locale.datepicker.quickSelectAriaLabel}
                 labelKey="id"
+                // @ts-ignore
                 onChange={(params) => {
                   if (!params.option) {
                     this.setState({ quickSelectId: null });
@@ -626,9 +642,62 @@ export default class Calendar<T = Date> extends React.Component<
     );
   };
 
+  renderActionBar = () => {
+    const { overrides = {}, primaryButton, secondaryButton } = this.props;
+    const [ButtonDockComponent, buttonDockProps] = getOverrides(overrides.ButtonDock, ButtonDock);
+    const [PrimaryButtonComponent, primaryButtonProps] = getOverrides(
+      overrides.PrimaryButton,
+      Button
+    );
+    const [SecondaryButtonComponent, secondaryButtonProps] = getOverrides(
+      overrides.SecondaryButton,
+      Button
+    );
+
+    const primaryButtonComponent =
+      primaryButton != null ? (
+        <PrimaryButtonComponent onClick={() => primaryButton.onClick()} {...primaryButtonProps}>
+          {primaryButton.label}
+        </PrimaryButtonComponent>
+      ) : null;
+    const secondaryButtonComponent =
+      secondaryButton != null ? (
+        <SecondaryButtonComponent
+          onClick={() => secondaryButton.onClick()}
+          kind={KIND.tertiary}
+          {...secondaryButtonProps}
+        >
+          {secondaryButton.label}
+        </SecondaryButtonComponent>
+      ) : null;
+
+    if (primaryButtonComponent || secondaryButtonComponent) {
+      return (
+        <ButtonDockComponent
+          primaryAction={primaryButtonComponent}
+          dismissiveAction={secondaryButtonComponent}
+          overrides={mergeOverrides(
+            {
+              ActionSubContainer: {
+                style: {
+                  flexDirection: 'row-reverse',
+                },
+              },
+            },
+            buttonDockProps.overrides
+          )}
+          {...buttonDockProps}
+        />
+      );
+    }
+
+    return null;
+  };
+
   render() {
     const { overrides = {} } = this.props;
     const [Root, rootProps] = getOverrides(overrides.Root, StyledRoot);
+    // @ts-ignore
     const [startDate, endDate] = [].concat(this.props.value);
 
     return (
@@ -637,8 +706,10 @@ export default class Calendar<T = Date> extends React.Component<
           <Root
             $density={this.props.density}
             data-baseweb="calendar"
-            role="application"
-            aria-roledescription="datepicker"
+            role="dialog"
+            aria-roledescription="date picker"
+            id={this.props.id}
+            // @ts-ignore
             ref={(root) => {
               if (root && root instanceof HTMLElement && !this.state.rootElement) {
                 this.setState({
@@ -656,6 +727,7 @@ export default class Calendar<T = Date> extends React.Component<
             {this.props.timeSelectStart &&
               this.renderTimeSelect(
                 startDate,
+                // @ts-ignore
                 (time) => this.handleTimeChange(time, 0),
                 locale.datepicker.timeSelectStartLabel
               )}
@@ -663,10 +735,12 @@ export default class Calendar<T = Date> extends React.Component<
               this.props.range &&
               this.renderTimeSelect(
                 endDate,
+                // @ts-ignore
                 (time) => this.handleTimeChange(time, 1),
                 locale.datepicker.timeSelectEndLabel
               )}
             {this.renderQuickSelect()}
+            {this.renderActionBar()}
           </Root>
         )}
       </LocaleContext.Consumer>

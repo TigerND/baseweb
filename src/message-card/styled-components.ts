@@ -13,10 +13,17 @@ export const StyledRoot = styled<
     $backgroundColor: string;
     $backgroundColorType: keyof typeof BACKGROUND_COLOR_TYPE;
     $imageLayout: keyof typeof IMAGE_LAYOUT | undefined;
+    $isClickable: boolean;
   }
 >(
   'button',
-  ({ $theme, $backgroundColor, $backgroundColorType, $imageLayout = IMAGE_LAYOUT.top }) => {
+  ({
+    $theme,
+    $backgroundColor,
+    $backgroundColorType,
+    $imageLayout = IMAGE_LAYOUT.top,
+    $isClickable,
+  }) => {
     const lightBackgroundStyle = {
       color: $theme.colors.contentOnColorInverse,
       borderStyle: 'solid',
@@ -32,7 +39,6 @@ export const StyledRoot = styled<
       alignItems: 'stretch',
       backgroundColor: $backgroundColor,
       borderRadius: $theme.borders.radius400,
-      cursor: 'pointer',
       display: 'flex',
       flexDirection: $imageLayout === IMAGE_LAYOUT.top ? 'column' : 'row',
       overflow: 'hidden',
@@ -44,41 +50,45 @@ export const StyledRoot = styled<
       ...($backgroundColorType === BACKGROUND_COLOR_TYPE.light
         ? lightBackgroundStyle
         : darkBackgroundStyle),
-      ':focus': {
-        outlineWidth: '3px',
-        outlineStyle: 'solid',
-        outlineColor: $theme.colors.borderAccent,
-        outlineOffset: '-3px',
-      },
-      ':hover:after': {
-        content: '""',
-        width: '100%',
-        height: '100%',
-        zIndex: '1',
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        backgroundColor:
-          $backgroundColorType === BACKGROUND_COLOR_TYPE.light
-            ? 'rgba(0, 0, 0, 0.04)'
-            : 'rgba(255, 255, 255, 0.10)',
-      },
-      ':active:after': {
-        content: '""',
-        width: '100%',
-        height: '100%',
-        zIndex: '1',
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        backgroundColor:
-          $backgroundColorType === BACKGROUND_COLOR_TYPE.light
-            ? 'rgba(0, 0, 0, 0.08)'
-            : 'rgba(255, 255, 255, 0.20)',
-      },
+      ...($isClickable && {
+        cursor: 'pointer',
+        ':focus': {
+          outlineWidth: '3px',
+          outlineStyle: 'solid',
+          outlineColor: $theme.colors.borderAccent,
+          outlineOffset: '-3px',
+        },
+        ':hover:after': {
+          content: '""',
+          width: '100%',
+          height: '100%',
+          zIndex: '1',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          backgroundColor:
+            $backgroundColorType === BACKGROUND_COLOR_TYPE.light
+              ? 'rgba(0, 0, 0, 0.04)'
+              : 'rgba(255, 255, 255, 0.10)',
+        },
+        ':active:after': {
+          content: '""',
+          width: '100%',
+          height: '100%',
+          zIndex: '1',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          backgroundColor:
+            $backgroundColorType === BACKGROUND_COLOR_TYPE.light
+              ? 'rgba(0, 0, 0, 0.08)'
+              : 'rgba(255, 255, 255, 0.20)',
+        },
+      }),
     };
   }
 );
+StyledRoot.displayName = 'StyledRoot';
 
 export const StyledImage = styled<
   'div',
@@ -97,6 +107,7 @@ export const StyledImage = styled<
       : { width: '112px', order: '1' }),
   };
 });
+StyledImage.displayName = 'StyledImage';
 
 export const StyledContentContainer = styled('div', ({ $theme }) => ({
   width: '100%',
@@ -106,12 +117,15 @@ export const StyledContentContainer = styled('div', ({ $theme }) => ({
   paddingBottom: $theme.sizing.scale600,
   paddingLeft: $theme.sizing.scale600,
 }));
+StyledContentContainer.displayName = 'StyledContentContainer';
 
 export const StyledHeadingContainer = styled('div', ({ $theme }) => ({
   ...$theme.typography.HeadingXSmall,
 }));
+StyledHeadingContainer.displayName = 'StyledHeadingContainer';
 
 export const StyledParagraphContainer = styled('div', ({ $theme }) => ({
   ...$theme.typography.ParagraphSmall,
   marginTop: $theme.sizing.scale100,
 }));
+StyledParagraphContainer.displayName = 'StyledParagraphContainer';

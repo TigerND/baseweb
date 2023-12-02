@@ -18,6 +18,7 @@ import { getOverrides, mergeOverrides } from '../helpers/overrides';
 export function Breadcrumbs(props: BreadcrumbsProps) {
   const { overrides = {}, showTrailingSeparator = false } = props;
   const childrenArray = Children.toArray(props.children);
+  // @ts-ignore
   const childrenWithSeparators = [];
 
   const [Root, baseRootProps] = getOverrides(overrides.Root, StyledRoot);
@@ -34,10 +35,11 @@ export function Breadcrumbs(props: BreadcrumbsProps) {
 
   childrenArray.forEach((child, index) => {
     childrenWithSeparators.push(
+      // @ts-ignore
       <ListItem key={`breadcrumb-item-${index}`} $itemIndex={index} {...baseListItemProps}>
         {child}
         {(showTrailingSeparator || index !== childrenArray.length - 1) && (
-          <Separator {...baseSeparatorProps} key={`separator-${index}`}>
+          <Separator {...baseSeparatorProps} aria-hidden={true} key={`separator-${index}`}>
             <ThemeContext.Consumer>
               {(theme) =>
                 theme.direction === 'rtl' ? (
@@ -61,6 +63,7 @@ export function Breadcrumbs(props: BreadcrumbsProps) {
           data-baseweb="breadcrumbs"
           {...baseRootProps}
         >
+          {/* @ts-ignore */}
           <List {...baseListProps}>{childrenWithSeparators}</List>
         </Root>
       )}

@@ -15,25 +15,45 @@ import type {
 import { artworkSizeToValue } from './utils';
 import { SHAPE } from './constants';
 
-export const StyledRoot = styled<'li', StyledRootProps>('li', ({ $theme, $shape }) => {
-  return {
-    alignItems: 'center',
-    backgroundColor: $theme.colors.backgroundPrimary,
-    display: 'flex',
-    listStyleType: 'none',
-    width: '100%',
-    borderTopLeftRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
-    borderTopRightRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
-    borderBottomLeftRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
-    borderBottomRightRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
-    overflow: 'hidden',
-  };
-});
+export const StyledRoot = styled<'li', StyledRootProps>(
+  'li',
+  ({ $theme, $shape, $isTapTarget = false }) => {
+    return {
+      alignItems: 'center',
+      backgroundColor: $theme.colors.backgroundPrimary,
+      display: 'flex',
+      listStyleType: 'none',
+      width: '100%',
+      borderTopLeftRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
+      borderTopRightRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
+      borderBottomLeftRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
+      borderBottomRightRadius: $shape === SHAPE.ROUND ? $theme.borders.radius400 : 0,
+      overflow: 'hidden',
+      ...($isTapTarget
+        ? {
+            // button style reset
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            textAlign: 'inherit',
+            boxShadow: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            border: 'none',
+            color: 'inherit',
+            font: 'inherit',
+          }
+        : {}),
+    };
+  }
+);
 
 StyledRoot.displayName = 'StyledRoot';
 
 export const StyledContent = styled<'div', StyledContentProps>(
   'div',
+  // @ts-ignore
   ({ $mLeft, $sublist, $theme }) => {
     return {
       ...expandBorderStyles($theme.borders.border100),
@@ -96,6 +116,15 @@ export const StyledArtworkContainer = styled<'div', StyledArtworkContainerProps>
 );
 
 StyledArtworkContainer.displayName = 'StyledArtworkContainer';
+
+export const StyledLabelRoot = styled('div', ({ $theme }) => {
+  return {
+    paddingTop: $theme.sizing.scale500,
+    paddingBottom: $theme.sizing.scale500,
+  };
+});
+
+StyledLabelRoot.displayName = 'StyledLabelRoot';
 
 export const StyledLabelContent = styled('p', ({ $theme }) => {
   return {
@@ -166,6 +195,7 @@ StyledHeadingContent.displayName = 'StyledHeadingContent';
 
 export const StyledHeadingContentRow = styled('div', {
   display: 'flex',
+  alignItems: 'baseline',
   justifyContent: 'space-between',
   width: '100%',
 });
@@ -176,7 +206,7 @@ export const StyledHeadingMainHeading = styled<'p', StyledHeadingHeadingProps>(
   'p',
   ({ $maxLines = 1, $theme }) => {
     return {
-      ...$theme.typography.HeadingSmall,
+      ...$theme.typography.HeadingXSmall,
       color: $theme.colors.contentPrimary,
       marginTop: 0,
       marginBottom: 0,
@@ -195,8 +225,8 @@ export const StyledHeadingSubHeading = styled<'p', StyledHeadingHeadingProps>(
   'p',
   ({ $maxLines = 1, $theme }) => {
     return {
-      ...$theme.typography.ParagraphLarge,
-      color: $theme.colors.contentPrimary,
+      ...$theme.typography.ParagraphMedium,
+      color: $theme.colors.contentSecondary,
       marginTop: 0,
       marginBottom: 0,
       marginRight: $theme.sizing.scale600,
@@ -227,7 +257,8 @@ export const StyledHeadingEndEnhancerContainer = styled<
 StyledHeadingEndEnhancerContainer.displayName = 'StyledHeadingEndEnhancerContainer';
 
 export const StyledHeadingEndEnhancerDescriptionContainer = styled('p', ({ $theme }) => ({
-  ...$theme.typography.ParagraphMedium,
+  ...$theme.typography.ParagraphSmall,
+  color: $theme.colors.contentSecondary,
   marginTop: 0,
   marginBottom: 0,
   display: 'flex',

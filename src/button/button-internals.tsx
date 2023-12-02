@@ -15,6 +15,7 @@ import { getOverrides } from '../helpers/overrides';
 
 import type { ButtonProps } from './types';
 
+// @ts-ignore
 function RenderEnhancer(props) {
   const { Enhancer, ...restProps } = props;
   if (typeof Enhancer === 'string') {
@@ -34,8 +35,9 @@ export default function ButtonInternals(props: ButtonProps) {
   );
   const [EndEnhancer, endEnhancerProps] = getOverrides(overrides.EndEnhancer, StyledEndEnhancer);
   const sharedProps = getSharedProps(props);
-  return (
-    <React.Fragment>
+
+  const content = (
+    <>
       {startEnhancer !== null && startEnhancer !== undefined && (
         <StartEnhancer {...sharedProps} {...startEnhancerProps}>
           <RenderEnhancer Enhancer={startEnhancer} />
@@ -47,6 +49,13 @@ export default function ButtonInternals(props: ButtonProps) {
           <RenderEnhancer Enhancer={endEnhancer} />
         </EndEnhancer>
       )}
-    </React.Fragment>
+    </>
   );
+
+  if (props.isLoading) {
+    const hiddenStyle = { opacity: 0, display: 'flex', height: '0px' };
+    return <div style={hiddenStyle}>{content}</div>;
+  }
+
+  return <React.Fragment>{content}</React.Fragment>;
 }

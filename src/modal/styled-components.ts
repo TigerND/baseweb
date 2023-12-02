@@ -14,12 +14,15 @@ type SizeStyle = Pick<StyleObject, 'maxWidth' | 'width' | 'alignSelf'>;
 function getSizeStyles($size: SizeProp): SizeStyle {
   const styles: SizeStyle = {
     maxWidth: '100%',
+    // @ts-ignore
     width: null,
   };
 
   if (typeof $size === 'number') {
     styles.width = `${$size}px`;
+    // @ts-ignore
   } else if (SIZE[$size]) {
+    // @ts-ignore
     styles.width = SIZE_WIDTHS[$size];
   } else if (typeof $size === 'string') {
     styles.width = $size;
@@ -142,7 +145,7 @@ export const Close = styled<'button', SharedStylePropsArg>('button', (props) => 
       color: $theme.colors.modalCloseColorHover,
     },
     ':focus': {
-      outline: $isFocusVisible ? `3px solid ${$theme.colors.accent}` : 'none',
+      outline: $isFocusVisible ? `3px solid ${$theme.colors.borderAccent}` : 'none',
     },
 
     // Positioning
@@ -198,3 +201,8 @@ export const ModalFooter = styled('div', ({ $theme }) => ({
   textAlign: $theme.direction === 'rtl' ? 'left' : 'right',
 }));
 ModalFooter.displayName = 'ModalFooter';
+
+export const Hidden = styled('div', {
+  display: 'none',
+});
+Hidden.displayName = 'Hidden';

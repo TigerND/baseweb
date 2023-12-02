@@ -10,6 +10,7 @@ export { default as StatefulContainer } from './stateful-container';
 export { default as Calendar } from './calendar';
 export { default as StatefulCalendar } from './stateful-calendar';
 export { default as Datepicker, default as DatePicker } from './datepicker';
+export { default as Datepicker_DO_NOT_USE } from './datepicker_DO_NOT_USE';
 export {
   default as StatefulDatepicker,
   default as StatefulDatePicker,
@@ -17,7 +18,7 @@ export {
 // Util functions
 export { formatDate } from './utils';
 // Constants
-export { DENSITY, ORIENTATION, STATE_CHANGE_TYPE } from './constants';
+export { DENSITY, ORIENTATION, RANGED_CALENDAR_BEHAVIOR, STATE_CHANGE_TYPE } from './constants';
 // Styled elements
 export * from './styled-components';
 // Dependency components and their types

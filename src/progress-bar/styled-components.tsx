@@ -11,7 +11,9 @@ import type { StyleProps, Size } from './types';
 import React from 'react';
 import type { StyleObject } from 'styletron-standard';
 
+// @ts-ignore
 function getBarHeight(size) {
+  // @ts-ignore
   return {
     [SIZE.small]: '2px',
     [SIZE.medium]: '4px',
@@ -48,6 +50,7 @@ export const StyledBar = styled<
     $size: Size;
     $steps?: number;
   }
+  // @ts-ignore
 >('div', (props) => {
   const { $theme, $size, $steps } = props;
   const { colors, sizing, borders } = $theme;
@@ -57,10 +60,11 @@ export const StyledBar = styled<
     borderTopRightRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     borderBottomLeftRadius: borderRadius,
-    backgroundColor: hexToRgb(colors.progressbarTrackFill, '0.16'),
+    backgroundColor: colors.backgroundTertiary,
     height: getBarHeight($size),
     flex: 1,
     overflow: 'hidden',
+    // @ts-ignore
     ...($steps < 2
       ? {}
       : {
@@ -138,7 +142,7 @@ export const StyledBarProgress = styled<'div', StyleProps>('div', (props) => {
     borderTopRightRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     borderBottomLeftRadius: borderRadius,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.backgroundAccent,
     height: '100%',
     width: '100%',
     transform: 'translateX(-102%)',
@@ -173,8 +177,8 @@ export const StyledInfiniteBar = styled<
     backgroundRepeat: 'no-repeat',
     backgroundPositionX: $isLeft ? '-50%' : '150%',
     backgroundImage: `linear-gradient(${$isLeft ? '90' : '270'}deg, transparent 0%, ${
-      colors.accent
-    } 25%, ${colors.accent} 75%, transparent 100%)`,
+      colors.backgroundAccent
+    } 25%, ${colors.backgroundAccent} 75%, transparent 100%)`,
     animationName: $isLeft
       ? {
           '0%': {
@@ -365,6 +369,7 @@ export const StyledProgressBarRoundedText = styled<
 >('div', ({ $theme, $size }) => {
   return {
     color: $theme.colors.contentPrimary,
+    // @ts-ignore
     ...$theme.typography[PROGRESS_BAR_ROUNDED_SIZES[$size].typography],
   };
 });

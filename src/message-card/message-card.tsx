@@ -13,12 +13,13 @@ import {
   StyledHeadingContainer,
   StyledParagraphContainer,
 } from './styled-components';
-import { Button as DefaultButton, SHAPE, SIZE } from '../button';
+import { Button as DefaultButton, SHAPE, SIZE, KIND } from '../button';
+import Delete from '../icon/delete';
 import { useStyletron } from '../styles/index';
 import { ThemeProvider, LightTheme } from '../';
 import { getBackgroundColorType } from './utils';
 import { colors } from '../tokens';
-import { getOverrides } from '../helpers/overrides';
+import { getOverrides, mergeOverrides } from '../helpers/overrides';
 import { IMAGE_LAYOUT, BACKGROUND_COLOR_TYPE, BUTTON_KIND } from './constants';
 import type { MessageCardProps } from './types';
 
@@ -26,6 +27,12 @@ const ButtonAlwaysLightTheme = ({ children, ...restProps }) => (
   <ThemeProvider theme={LightTheme}>
     <DefaultButton {...restProps}>{children}</DefaultButton>
   </ThemeProvider>
+);
+
+const DefaultDismissButton = (props) => (
+  <DefaultButton size={SIZE.compact} shape={SHAPE.circle} kind={KIND.secondary} {...props}>
+    <Delete size={32} />
+  </DefaultButton>
 );
 
 const MessageCard = ({
@@ -36,28 +43,78 @@ const MessageCard = ({
   heading,
   image,
   onClick,
+  onDismiss,
   overrides = {},
   paragraph,
 }: MessageCardProps) => {
   const { src, layout = IMAGE_LAYOUT.top, backgroundPosition, ariaLabel } = image || {};
 
-  const [Root, RootProps] = getOverrides(overrides.Root, StyledRoot);
+  const [, theme] = useStyletron();
+
+  const [Root, rootProps] = getOverrides(overrides.Root, StyledRoot);
   const [ContentContainer, ContentContainerProps] = getOverrides(
     overrides.ContentContainer,
     StyledContentContainer
   );
-  const [HeadingContainer, HeadingContainerProps] = getOverrides(
+  const [HeadingContainer, headingContainerProps] = getOverrides(
     overrides.HeadingContainer,
     StyledHeadingContainer
   );
-  const [ParagraphContainer, ParagraphContainerProps] = getOverrides(
+  const [ParagraphContainer, paragraphContainerProps] = getOverrides(
     overrides.ParagraphContainer,
     StyledParagraphContainer
   );
-  const [Image, ImageProps] = getOverrides(overrides.Image, StyledImage);
-  const [Button, ButtonProps] = getOverrides(overrides.Button, ButtonAlwaysLightTheme);
+  const [Image, imageProps] = getOverrides(overrides.Image, StyledImage);
+  const [ActionButton, actionButtonProps] = getOverrides(overrides.Button, ButtonAlwaysLightTheme);
+  const [DismissButton, dismissButtonProps] = getOverrides(
+    overrides.DismissButton,
+    DefaultDismissButton
+  );
 
-  const [, theme] = useStyletron();
+  const defaultActionButtonOverrides = {
+    BaseButton: {
+      style: {
+        textAlign: 'center',
+        ...(onDismiss ? {} : { pointerEvents: 'none' }),
+        ...(buttonKind === BUTTON_KIND.tertiary
+          ? {
+              marginTop: theme.sizing.scale100,
+              transform:
+                theme.direction === 'rtl'
+                  ? `translateX(${theme.sizing.scale500})`
+                  : `translateX(-${theme.sizing.scale500})`,
+            }
+          : {
+              marginTop: theme.sizing.scale500,
+            }),
+      },
+    },
+  };
+  actionButtonProps.overrides = mergeOverrides(
+    defaultActionButtonOverrides,
+    actionButtonProps.overrides
+  );
+
+  const defaultDismissButtonOverrides = {
+    BaseButton: {
+      style: {
+        position: 'absolute',
+        top: theme.sizing.scale200,
+        right: theme.sizing.scale200,
+        // using a pseudo-element to acheive a 48px tap target
+        ':after': {
+          content: '""',
+          position: 'absolute',
+          height: '48px',
+          width: '48px',
+        },
+      },
+    },
+  };
+  dismissButtonProps.overrides = mergeOverrides(
+    defaultDismissButtonOverrides,
+    dismissButtonProps.overrides
+  );
 
   let backgroundColorType = backgroundColorTypeProp || getBackgroundColorType(backgroundColor);
   if (!backgroundColorType) {
@@ -87,12 +144,14 @@ const MessageCard = ({
 
   return (
     <Root
-      onClick={onClick}
+      {...(onDismiss ? { $as: 'div' } : { onClick })}
       $backgroundColor={backgroundColor}
       $backgroundColorType={backgroundColorType}
       $imageLayout={layout}
-      {...RootProps}
+      $isClickable={!onDismiss}
+      {...rootProps}
     >
+      {onDismiss && <DismissButton onClick={onDismiss} {...dismissButtonProps} />}
       {image && (
         <Image
           role="img"
@@ -100,46 +159,25 @@ const MessageCard = ({
           $src={src}
           $imageLayout={layout}
           $backgroundPosition={backgroundPosition}
-          {...ImageProps}
+          {...imageProps}
         />
       )}
       <ContentContainer {...ContentContainerProps}>
-        {heading && <HeadingContainer {...HeadingContainerProps}>{heading}</HeadingContainer>}
+        {heading && <HeadingContainer {...headingContainerProps}>{heading}</HeadingContainer>}
         {paragraph && (
-          <ParagraphContainer {...ParagraphContainerProps}>{paragraph}</ParagraphContainer>
+          <ParagraphContainer {...paragraphContainerProps}>{paragraph}</ParagraphContainer>
         )}
         {buttonLabel && (
-          <Button
-            $as="div"
+          <ActionButton
+            {...(onDismiss ? { onClick } : { $as: 'div', tabIndex: -1, role: 'none' })}
             kind={buttonKind}
             shape={SHAPE.pill}
             size={SIZE.compact}
-            role="none"
-            tabIndex={-1}
             colors={buttonColors}
-            overrides={{
-              BaseButton: {
-                style: {
-                  textAlign: 'center',
-                  pointerEvents: 'none',
-                  ...(buttonKind === BUTTON_KIND.tertiary
-                    ? {
-                        marginTop: theme.sizing.scale100,
-                        transform:
-                          theme.direction === 'rtl'
-                            ? `translateX(${theme.sizing.scale500})`
-                            : `translateX(-${theme.sizing.scale500})`,
-                      }
-                    : {
-                        marginTop: theme.sizing.scale500,
-                      }),
-                },
-              },
-            }}
-            {...ButtonProps}
+            {...actionButtonProps}
           >
             {buttonLabel}
-          </Button>
+          </ActionButton>
         )}
       </ContentContainer>
     </Root>

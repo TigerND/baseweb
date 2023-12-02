@@ -26,7 +26,7 @@ class ProgressBar extends React.Component<
 > {
   static defaultProps = {
     getProgressLabel: (value: number, maxValue: number, minValue: number) =>
-      `${Math.round(((value - minValue) / (maxValue - minValue)) * 100)}% Loaded`,
+      `${Math.round(((value - minValue) / (maxValue - minValue)) * 100)}% Complete`,
     infinite: false,
     overrides: {},
     showLabel: false,
@@ -63,7 +63,15 @@ class ProgressBar extends React.Component<
       forwardedRef,
       ...restProps
     } = this.props;
-    const ariaLabel = this.props['aria-label'] || this.props.ariaLabel;
+    const propsAriaLabel = this.props['aria-label'] || this.props.ariaLabel;
+    const progressLabel = getProgressLabel(value, maxValue, minValue);
+    const stepsLabel = getStepProgressLabel(value, maxValue, minValue, steps);
+    const ariaLabel =
+      propsAriaLabel || this.props.infinite
+        ? 'Loading'
+        : this.props.steps > 1
+        ? stepsLabel
+        : progressLabel;
     // fallback on successValue (and it's default) if maxValue is not set by user
     const maximumValue = maxValue !== 100 ? maxValue : successValue;
     const [Root, rootProps] = getOverrides(overrides.Root, StyledRoot);
@@ -88,6 +96,7 @@ class ProgressBar extends React.Component<
       const children = [];
       for (let i = 0; i < steps; i++) {
         children.push(
+          // @ts-ignore
           <Bar key={i} {...sharedProps} {...barProps}>
             <BarProgress $index={i} {...sharedProps} {...barProgressProps} />
           </Bar>
@@ -95,13 +104,22 @@ class ProgressBar extends React.Component<
       }
       return children;
     }
+    function getStepProgressLabel(
+      value: number,
+      maxValue: number,
+      minValue: number,
+      steps: number
+    ) {
+      return `Step ${Math.ceil(((value - minValue) / (maxValue - minValue)) * steps)} of ${steps}`;
+    }
     return (
-      // eslint-disable-next-line jsx-a11y/role-supports-aria-props
+      /* eslint-disable jsx-a11y/role-supports-aria-props */
+
       <Root
         ref={forwardedRef}
         data-baseweb="progress-bar"
         role="progressbar"
-        aria-label={ariaLabel || getProgressLabel(value, maximumValue, minValue)}
+        aria-label={ariaLabel}
         aria-valuenow={infinite ? null : value}
         aria-valuemin={infinite ? null : minValue}
         aria-valuemax={infinite ? null : maximumValue}
@@ -115,6 +133,7 @@ class ProgressBar extends React.Component<
           {infinite ? (
             <React.Fragment>
               <InfiniteBar $isLeft={true} $size={sharedProps.$size} {...infiniteBarProps} />
+
               <InfiniteBar $size={sharedProps.$size} {...infiniteBarProps} />
             </React.Fragment>
           ) : (
@@ -128,10 +147,12 @@ class ProgressBar extends React.Component<
         )}
       </Root>
     );
+    /* eslint-enable jsx-a11y/role-supports-aria-props */
   }
 }
 
 const ForwardedProgressBar = React.forwardRef<HTMLDivElement, Partial<ProgressBarProps>>(
+  // @ts-ignore
   (props: ProgressBarProps, ref) => (
     //$FlowExpectedError[cannot-spread-inexact]
     <ProgressBar forwardedRef={ref} {...props} />

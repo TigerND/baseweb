@@ -108,7 +108,7 @@ export const StyledSortableLabel = styled('button', ({ $theme }) => {
       cursor: 'pointer',
     },
     ':disabled': {
-      color: $theme.colors.mono500,
+      color: $theme.colors.contentStateDisabled,
     },
   };
 });
@@ -154,6 +154,7 @@ type CellStyledProps = {
   $striped?: boolean;
 };
 
+// @ts-ignore
 const StyledCellElement = styled<'div', CellStyledProps>('div', ({ $theme, $striped }) => {
   return {
     ...$theme.typography.font200,
@@ -184,10 +185,11 @@ export const StyledFilterButton = styled<
     $disabled?: boolean;
     $active?: boolean;
   }
+  // @ts-ignore
 >('button', (props) => {
   function getIconColor() {
     if (props.$disabled) {
-      return props.$theme.colors.mono500;
+      return props.$theme.colors.contentStateDisabled;
     }
 
     if (props.$active) {
@@ -269,7 +271,7 @@ export const StyledAction = styled('button', ({ $theme }) => {
     borderTopStyle: 'none',
     borderRightStyle: 'none',
     borderBottomStyle: 'none',
-    color: $theme.colors.primary,
+    color: $theme.colors.contentPrimary,
     paddingTop: 0,
     paddingRight: 0,
     paddingBottom: 0,

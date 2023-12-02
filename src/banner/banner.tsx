@@ -22,26 +22,27 @@ import {
 } from './styled-components';
 import type { BannerProps } from './types';
 
+// @ts-ignore
 function low(theme, kind) {
   switch (kind) {
     case KIND.negative:
       return {
         actionBackgroundColor: theme.colors.bannerActionLowNegative,
-        backgroundColor: theme.colors.backgroundLightNegative,
+        backgroundColor: theme.colors.backgroundNegativeLight,
         color: theme.colors.contentPrimary,
       };
 
     case KIND.positive:
       return {
         actionBackgroundColor: theme.colors.bannerActionLowPositive,
-        backgroundColor: theme.colors.backgroundLightPositive,
+        backgroundColor: theme.colors.backgroundPositiveLight,
         color: theme.colors.contentPrimary,
       };
 
     case KIND.warning:
       return {
         actionBackgroundColor: theme.colors.bannerActionLowWarning,
-        backgroundColor: theme.colors.backgroundLightWarning,
+        backgroundColor: theme.colors.backgroundWarningLight,
         color: theme.colors.contentPrimary,
       };
 
@@ -49,12 +50,13 @@ function low(theme, kind) {
     default:
       return {
         actionBackgroundColor: theme.colors.bannerActionLowInfo,
-        backgroundColor: theme.colors.backgroundLightAccent,
+        backgroundColor: theme.colors.backgroundAccentLight,
         color: theme.colors.contentPrimary,
       };
   }
 }
 
+// @ts-ignore
 function high(theme, kind) {
   switch (kind) {
     case KIND.negative:
@@ -88,6 +90,7 @@ function high(theme, kind) {
   }
 }
 
+// @ts-ignore
 function Leading({ artwork }) {
   const [, theme] = useStyletron();
 
@@ -99,6 +102,7 @@ function Leading({ artwork }) {
   return artwork.icon({ size });
 }
 
+// @ts-ignore
 function Below({ action, backgroundColor, color }) {
   if (!action || action.position !== ACTION_POSITION.below) {
     return null;
@@ -127,6 +131,7 @@ function Below({ action, backgroundColor, color }) {
   return null;
 }
 
+// @ts-ignore
 function Trailing({ action, backgroundColor, color, overrides, nested }) {
   const [, theme] = useStyletron();
 
@@ -165,6 +170,7 @@ function Trailing({ action, backgroundColor, color, overrides, nested }) {
           onClick={action.onClick}
           size={BUTTON_SIZE.compact}
           shape={BUTTON_SHAPE.pill}
+          overrides={{ BaseButton: { style: { whiteSpace: 'nowrap' } } }}
         >
           {action.label}
         </Button>
@@ -208,6 +214,9 @@ export function Banner({
   );
   const [Title, titleProps] = getOverrides(overrides.Title, StyledTitle);
   const [Message, messageProps] = getOverrides(overrides.Message, StyledMessage);
+  const ariaLabel = rootProps.hasOwnProperty('aria-label')
+    ? rootProps['aria-label']
+    : 'this is an announcement banner';
 
   return (
     <Root
@@ -215,6 +224,8 @@ export function Banner({
       $color={styles.color}
       $nested={nested}
       {...rootProps}
+      role="complementary"
+      aria-label={ariaLabel}
     >
       <LeadingContent $includesArtwork={Boolean(artwork)} {...leadingContentProps}>
         <Leading artwork={artwork} />
@@ -222,6 +233,7 @@ export function Banner({
 
       <MessageContent $actionPosition={actionPosition} {...messageContentProps}>
         {Boolean(title) && <Title {...titleProps}>{title}</Title>}
+
         {Boolean(children) && <Message {...messageProps}>{children}</Message>}
       </MessageContent>
 

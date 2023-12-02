@@ -9,6 +9,7 @@ import { styled } from '../styles';
 
 import type { SharedStyleProps } from './types';
 
+// @ts-ignore
 function getBorderColor(props) {
   const { $disabled, $checked, $error, $isIndeterminate, $theme, $isFocusVisible } = props;
   const { colors } = $theme;
@@ -25,6 +26,7 @@ function getBorderColor(props) {
   }
 }
 
+// @ts-ignore
 function getLabelPadding(props) {
   const { $labelPlacement = '', $theme } = props;
   const { sizing } = $theme;
@@ -58,6 +60,7 @@ function getLabelPadding(props) {
   };
 }
 
+// @ts-ignore
 function getBackgroundColor(props) {
   const { $disabled, $checked, $isIndeterminate, $error, $isHovered, $isActive, $theme } = props;
   const { colors } = $theme;
@@ -102,10 +105,11 @@ function getBackgroundColor(props) {
   }
 }
 
+// @ts-ignore
 function getLabelColor(props) {
   const { $disabled, $theme } = props;
   const { colors } = $theme;
-  return $disabled ? colors.contentSecondary : colors.contentPrimary;
+  return $disabled ? colors.contentStateDisabled : colors.contentPrimary;
 }
 
 export const Root = styled<'label', SharedStyleProps>('label', (props) => {
@@ -121,6 +125,7 @@ export const Root = styled<'label', SharedStyleProps>('label', (props) => {
 
 Root.displayName = 'Root';
 
+// @ts-ignore
 export const Checkmark = styled<'span', SharedStyleProps>('span', (props) => {
   const { $checked, $disabled, $error, $isIndeterminate, $theme, $isFocusVisible } = props;
   const { sizing, animation } = $theme;
@@ -172,7 +177,7 @@ export const Checkmark = styled<'span', SharedStyleProps>('span', (props) => {
     borderTopRightRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     borderBottomLeftRadius: borderRadius,
-    outline: $isFocusVisible && $checked ? `3px solid ${$theme.colors.accent}` : 'none',
+    outline: $isFocusVisible && $checked ? `3px solid ${$theme.colors.borderAccent}` : 'none',
     display: 'inline-block',
     verticalAlign: 'middle',
     backgroundImage: $isIndeterminate
@@ -220,6 +225,7 @@ export const Input = styled('input', {
 
 Input.displayName = 'Input';
 
+// @ts-ignore
 export const Toggle = styled<'div', SharedStyleProps>('div', (props) => {
   let backgroundColor = props.$theme.colors.toggleFill;
   if (props.$disabled) {
@@ -237,7 +243,7 @@ export const Toggle = styled<'div', SharedStyleProps>('div', (props) => {
     borderBottomRightRadius: '50%',
     borderBottomLeftRadius: '50%',
     boxShadow: props.$isFocusVisible
-      ? `0 0 0 3px ${props.$theme.colors.accent}`
+      ? `0 0 0 3px ${props.$theme.colors.borderAccent}`
       : props.$isHovered && !props.$disabled
       ? props.$theme.lighting.shadow500
       : props.$theme.lighting.shadow400,

@@ -33,6 +33,7 @@ describe('toaster', () => {
   describe('toaster methods', () => {
     it('toaster[show | update | clear]', async () => {
       render(<ToasterContainer />);
+      // @ts-ignore
       let key;
 
       act(() => {
@@ -41,11 +42,13 @@ describe('toaster', () => {
       await findByText(getBody(), 'show');
 
       act(() => {
+        // @ts-ignore
         toaster.update(String(key), { children: 'update' });
       });
       await findByText(getBody(), 'update');
 
       act(() => {
+        // @ts-ignore
         toaster.clear(key);
       });
       await waitForElementToBeRemoved(() => getByText(getBody(), 'update'));
@@ -109,5 +112,23 @@ describe('toaster', () => {
       await waitForElementToBeRemoved(() => getByText(getBody(), 'info'), { timeout: 2000 });
       expect(queryByText(getBody(), 'info')).toBeNull();
     });
+  });
+
+  it('mounts container children only once', () => {
+    let mounts = 0;
+    const TestComponent = () => {
+      React.useEffect(() => {
+        mounts += 1;
+      }, []);
+      return <span data-testid="test-child">test</span>;
+    };
+    render(
+      <ToasterContainer overrides={{ Root: { props: { 'data-testid': 'root' } } }}>
+        <TestComponent />
+      </ToasterContainer>
+    );
+    getByTestId(getBody(), 'root');
+    getByTestId(getBody(), 'test-child');
+    expect(mounts).toBe(1);
   });
 });

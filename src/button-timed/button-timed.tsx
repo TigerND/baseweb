@@ -7,10 +7,7 @@ LICENSE file in the root directory of this source tree.
 import * as React from 'react';
 import { Button, SIZE, KIND, SHAPE } from '../button';
 import type { ButtonTimedProps } from './types';
-import {
-  BaseButtonTimed as StyledBaseButtonTimed,
-  TimerContainer as StyledTimerContainer,
-} from './styled-components';
+import { StyledBaseButtonTimed, StyledTimerContainer } from './styled-components';
 import { formatTime } from './utils';
 import { getOverrides, mergeOverrides } from '../helpers/overrides';
 
@@ -24,19 +21,30 @@ const ButtonTimed = (props: ButtonTimedProps) => {
     overrides = {},
     ...restProps
   } = props;
+  const [startTime, setStartTime] = React.useState<number>(Date.now());
   const [timeRemaining, setTimeRemaining] = React.useState<number>(initialTime * 1000);
 
   React.useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (timeRemaining > 0 && !paused) {
-        setTimeRemaining((seconds) => seconds - 100);
+    if (!paused) {
+      setStartTime(Date.now() - (initialTime * 1000 - timeRemaining));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paused, initialTime]);
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!paused) {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(initialTime * 1000 - elapsed, 0);
+        setTimeRemaining(remaining);
+        if (remaining === 0) {
+          onClickProp();
+        }
       }
     }, 100);
-    if (timeRemaining === 0) {
-      onClickProp();
-    }
-    return () => clearTimeout(timerId);
-  }, [timeRemaining, paused]);
+
+    return () => clearInterval(intervalId);
+  }, [startTime, paused, onClickProp, initialTime]);
 
   const onClick = () => {
     setTimeRemaining(0);
@@ -66,6 +74,7 @@ const ButtonTimed = (props: ButtonTimedProps) => {
     },
     {
       Root: buttonOverrides.Root || {},
+      // @ts-ignore
       BaseButton: buttonOverrides.BaseButton,
       StartEnhancer: buttonOverrides.StartEnhancer || {},
       EndEnhancer: buttonOverrides.EndEnhancer || {},

@@ -51,15 +51,40 @@ const ListItem = React.forwardRef<HTMLLIElement, ListProps>((props: ListProps, r
     }
   }, [props.artworkSize, props.sublist]);
 
+  const isTapTarget = Boolean(props.onClick);
+
+  const getMainTextFromChild = (child: React.ReactNode | React.ReactNode[] | string) => {
+    if (typeof child === 'string') {
+      return child;
+    } else if (React.isValidElement(child)) {
+      return getMainTextFromChild(child.props.children);
+    } else {
+      return 'List item';
+    }
+  };
+
+  const listItemName =
+    React.Children.count(props.children) === 0
+      ? ['List item']
+      : React.Children.map(props.children, (child) => {
+          return getMainTextFromChild(child);
+        });
+
+  // @ts-expect-error todo(ts-migration) TS18049 'listItemName' is possibly 'null' or 'undefined'.
+  const ariaLabel = props.hasOwnProperty('aria-label') ? props['aria-label'] : listItemName[0];
+
   return (
     <Root
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ref={ref as any}
       $shape={props.shape || SHAPE.DEFAULT}
-      aria-label={props['aria-label']}
+      $as={isTapTarget ? 'button' : 'li'}
+      $isTapTarget={isTapTarget}
+      aria-label={props.role !== 'presentation' ? ariaLabel : null}
       aria-selected={props['aria-selected']}
       id={props.id}
       role={props.role}
+      onClick={props.onClick}
       {...rootProps}
     >
       {Artwork && (
@@ -77,6 +102,7 @@ const ListItem = React.forwardRef<HTMLLIElement, ListProps>((props: ListProps, r
           />
         </ArtworkContainer>
       )}
+
       <Content $mLeft={!Artwork} $sublist={!!props.sublist} {...contentProps}>
         {props.children}
         {EndEnhancer &&

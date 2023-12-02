@@ -19,6 +19,7 @@ export type Shape = typeof SHAPE.DEFAULT | typeof SHAPE.ROUND;
 
 export type StyledRootProps = {
   $shape: Shape;
+  $isTapTarget?: boolean;
 };
 export type StyledArtworkContainerProps = {
   $artworkSize: ArtworkSizes | number;
@@ -49,12 +50,14 @@ export type ListProps = {
   'aria-label'?: string;
   'aria-selected'?: boolean;
   id?: String;
+  onClick?: (a: React.SyntheticEvent<HTMLButtonElement>) => unknown;
   overrides?: ListOverrides;
   role?: string;
   sublist?: boolean;
 };
 
 export type LabelOverrides = {
+  LabelRoot?: Override;
   LabelContent?: Override;
   LabelDescription?: Override;
   LabelSublistContent?: Override;

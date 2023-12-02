@@ -10,29 +10,36 @@ import shade from 'polished/lib/color/shade.js';
 import { styled, type Theme } from '../styles';
 import { KIND, VARIANT, SIZE } from './constants';
 import type { SharedPropsArg } from './types';
-import { colors as colorTokens } from '../tokens';
 
 export function customOnRamp(color?: string, unit?: string) {
   switch (unit) {
     case '0':
       return 'white';
     case '50':
+      // @ts-ignore
       return tint(0.8, color);
     case '100':
+      // @ts-ignore
       return tint(0.6, color);
     case '200':
+      // @ts-ignore
       return tint(0.4, color);
     case '300':
+      // @ts-ignore
       return tint(0.2, color);
     case '400':
       return color;
     case '500':
+      // @ts-ignore
       return shade(0.2, color);
     case '600':
+      // @ts-ignore
       return shade(0.4, color);
     case '700':
+      // @ts-ignore
       return shade(0.6, color);
     case '800':
+      // @ts-ignore
       return shade(0.8, color);
     case '1000':
       return 'black';
@@ -48,24 +55,31 @@ const COLOR_STATE = {
 } as const;
 
 // Probably best to bake this into the theme once we hit our next major.
+// @ts-ignore
 const pick = (theme, light, dark) => (theme.name && theme.name.includes('dark') ? dark : light);
 
 const neutralColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: theme.colors.tagNeutralFontDisabled,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagNeutralOutlinedDisabled,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: theme.colors.tagNeutralSolidFont,
     backgroundColor: theme.colors.tagNeutralSolidBackground,
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: theme.colors.tagNeutralOutlinedFont,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagNeutralOutlinedBackground,
   }),
@@ -73,20 +87,26 @@ const neutralColorStates = {
 
 const primaryColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: theme.colors.tagPrimaryFontDisabled,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagPrimaryOutlinedDisabled,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: theme.colors.tagPrimarySolidFont,
     backgroundColor: theme.colors.tagPrimarySolidBackground,
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: theme.colors.tagPrimaryOutlinedFont,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagPrimaryOutlinedBackground,
   }),
@@ -94,20 +114,26 @@ const primaryColorStates = {
 
 const accentColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: theme.colors.tagAccentFontDisabled,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagAccentOutlinedDisabled,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: theme.colors.tagAccentSolidFont,
     backgroundColor: theme.colors.tagAccentSolidBackground,
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: theme.colors.tagAccentOutlinedFont,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagAccentOutlinedBackground,
   }),
@@ -115,20 +141,26 @@ const accentColorStates = {
 
 const positiveColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: theme.colors.tagPositiveFontDisabled,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagPositiveOutlinedDisabled,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: theme.colors.tagPositiveSolidFont,
     backgroundColor: theme.colors.tagPositiveSolidBackground,
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: theme.colors.tagPositiveOutlinedFont,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagPositiveOutlinedBackground,
   }),
@@ -136,20 +168,26 @@ const positiveColorStates = {
 
 const warningColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: theme.colors.tagWarningFontDisabled,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagWarningOutlinedDisabled,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: theme.colors.tagWarningSolidFont,
     backgroundColor: theme.colors.tagWarningSolidBackground,
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: theme.colors.tagWarningOutlinedFont,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagWarningOutlinedBackground,
   }),
@@ -157,20 +195,26 @@ const warningColorStates = {
 
 const negativeColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: theme.colors.tagNegativeFontDisabled,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagNegativeOutlinedDisabled,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: theme.colors.tagNegativeSolidFont,
     backgroundColor: theme.colors.tagNegativeSolidBackground,
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: theme.colors.tagNegativeOutlinedFont,
+    // @ts-ignore
     backgroundColor: null,
     borderColor: theme.colors.tagNegativeOutlinedBackground,
   }),
@@ -178,80 +222,104 @@ const negativeColorStates = {
 
 const orangeColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
-    color: pick(theme, colorTokens.orange200, colorTokens.orange600),
+    color: pick(theme, theme.colors.orange200, theme.colors.orange600),
+    // @ts-ignore
     backgroundColor: null,
-    borderColor: pick(theme, colorTokens.orange200, colorTokens.orange700),
+    borderColor: pick(theme, theme.colors.orange200, theme.colors.orange700),
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
-    color: colorTokens.white,
-    backgroundColor: pick(theme, colorTokens.orange400, colorTokens.orange500),
+    color: theme.colors.white,
+    backgroundColor: pick(theme, theme.colors.orange400, theme.colors.orange500),
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
-    color: pick(theme, colorTokens.orange400, colorTokens.orange300),
+    color: pick(theme, theme.colors.orange400, theme.colors.orange300),
+    // @ts-ignore
     backgroundColor: null,
-    borderColor: pick(theme, colorTokens.orange200, colorTokens.orange500),
+    borderColor: pick(theme, theme.colors.orange200, theme.colors.orange500),
   }),
 };
 
 const purpleColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
-    color: pick(theme, colorTokens.purple200, colorTokens.purple600),
+    color: pick(theme, theme.colors.purple200, theme.colors.purple600),
+    // @ts-ignore
     backgroundColor: null,
-    borderColor: pick(theme, colorTokens.purple200, colorTokens.purple700),
+    borderColor: pick(theme, theme.colors.purple200, theme.colors.purple700),
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
-    color: colorTokens.white,
-    backgroundColor: pick(theme, colorTokens.purple400, colorTokens.purple500),
+    color: theme.colors.white,
+    backgroundColor: pick(theme, theme.colors.purple400, theme.colors.purple500),
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
-    color: pick(theme, colorTokens.purple400, colorTokens.purple300),
+    color: pick(theme, theme.colors.purple400, theme.colors.purple300),
+    // @ts-ignore
     backgroundColor: null,
-    borderColor: pick(theme, colorTokens.purple200, colorTokens.purple500),
+    borderColor: pick(theme, theme.colors.purple200, theme.colors.purple500),
   }),
 };
 
 const brownColorStates = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
-    color: pick(theme, colorTokens.brown200, colorTokens.brown600),
+    color: pick(theme, theme.colors.brown200, theme.colors.brown600),
+    // @ts-ignore
     backgroundColor: null,
-    borderColor: pick(theme, colorTokens.brown200, colorTokens.brown700),
+    borderColor: pick(theme, theme.colors.brown200, theme.colors.brown700),
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
-    color: colorTokens.white,
-    backgroundColor: pick(theme, colorTokens.brown400, colorTokens.brown500),
+    color: theme.colors.white,
+    backgroundColor: pick(theme, theme.colors.brown400, theme.colors.brown500),
+    // @ts-ignore
     borderColor: null,
   }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
-    color: pick(theme, colorTokens.brown400, colorTokens.brown300),
+    color: pick(theme, theme.colors.brown400, theme.colors.brown300),
+    // @ts-ignore
     backgroundColor: null,
-    borderColor: pick(theme, colorTokens.brown200, colorTokens.brown500),
+    borderColor: pick(theme, theme.colors.brown200, theme.colors.brown500),
   }),
 };
 
 const customColorStates = {
+  // @ts-ignore
   [COLOR_STATE.disabled]: (theme, color) => ({
     color: customOnRamp(color, theme.colors.tagFontDisabledRampUnit),
+    // @ts-ignore
     backgroundColor: null,
     borderColor: customOnRamp(color, theme.colors.tagSolidDisabledRampUnit),
   }),
+  // @ts-ignore
   [COLOR_STATE.solid]: (theme, color) => ({
     color: customOnRamp(color, theme.colors.tagSolidFontRampUnit),
     backgroundColor: customOnRamp(color, theme.colors.tagSolidRampUnit),
+    // @ts-ignore
     borderColor: null,
   }),
+  // @ts-ignore
   [COLOR_STATE.outline]: (theme, color) => ({
     color: customOnRamp(color, theme.colors.tagOutlinedFontRampUnit),
+    // @ts-ignore
     backgroundColor: null,
     borderColor: customOnRamp(color, theme.colors.tagOutlinedRampUnit),
   }),
@@ -275,6 +343,7 @@ const colorMap = {
   [KIND.custom]: customColorStates,
 };
 
+// @ts-ignore
 const getColorStateFromProps = (props) => {
   if (props.$disabled) return COLOR_STATE.disabled;
   if (props.$variant === VARIANT.solid) return COLOR_STATE.solid;
@@ -349,13 +418,14 @@ export const Text = styled<'span', SharedPropsArg>(
       $theme: Theme;
     }
   ) => {
-    const { $theme } = props;
+    const { $theme, $contentMaxWidth } = props;
 
     return {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
-      maxWidth: props.$theme.sizing.scale3200,
+      maxWidth:
+        $contentMaxWidth === null ? 'auto' : $contentMaxWidth || props.$theme.sizing.scale3200,
       order: $theme.direction === 'rtl' ? 1 : 0,
     };
   }
@@ -380,6 +450,7 @@ export const Root = styled<'span', SharedPropsArg>(
       $isFocusVisible,
       $color,
       $size = SIZE.small,
+      $contentMaxWidth,
     } = props;
     const borderRadius = $theme.borders.tagBorderRadius;
     const paddingMagnitude = {
@@ -388,6 +459,7 @@ export const Root = styled<'span', SharedPropsArg>(
       [SIZE.large]: $theme.sizing.scale600,
     }[$size];
     const borderWidth = !$disabled && $variant === VARIANT.solid ? 0 : '2px';
+    // @ts-ignore
     const { color, backgroundColor, borderColor } = colorMap[$kind][getColorStateFromProps(props)](
       $theme,
       $color
@@ -426,6 +498,7 @@ export const Root = styled<'span', SharedPropsArg>(
         [SIZE.large]: '40px',
       }[$size],
       justifyContent: 'space-between',
+      maxWith: $contentMaxWidth === null ? '100%' : 'auto',
       marginTop: '5px',
       marginBottom: '5px',
       marginLeft: '5px',
@@ -451,7 +524,9 @@ export const Root = styled<'span', SharedPropsArg>(
           : {
               boxShadow: $isFocusVisible
                 ? `0 0 0 3px ${
-                    $kind === KIND.accent ? $theme.colors.primaryA : $theme.colors.accent
+                    $kind === KIND.accent
+                      ? $theme.colors.backgroundInversePrimary
+                      : $theme.colors.backgroundAccent
                   }`
                 : 'none',
             },

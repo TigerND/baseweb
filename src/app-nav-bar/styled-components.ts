@@ -5,10 +5,9 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 */
 import { styled, withStyle } from '../styles';
-import { getMediaQueries } from '../helpers/responsive-helpers';
+import { getMediaQueryPageMargins, getMinimumPageMargins } from '../helpers/responsive-helpers';
 import { StyledListItem } from '../menu';
 import { KIND } from './constants';
-import { type StyleObject } from 'styletron-react';
 
 const StyledButton = styled<
   'button',
@@ -36,7 +35,7 @@ const StyledButton = styled<
   marginTop: 0,
   marginRight: 0,
   marginBottom: 0,
-  outline: $isFocusVisible ? `3px solid ${$theme.colors.accent}` : 'none',
+  outline: $isFocusVisible ? `3px solid ${$theme.colors.borderAccent}` : 'none',
   outlineOffset: '-3px',
   WebkitAppearance: 'none',
   cursor: 'pointer',
@@ -45,47 +44,16 @@ StyledButton.displayName = 'StyledButton';
 
 export const StyledRoot = styled('div', (props) => {
   const { $theme } = props;
-  const mediaQueries = getMediaQueries($theme.breakpoints);
-  const breakpoints = Object.values($theme.breakpoints).sort();
-  const margins = [];
-  if (Array.isArray($theme.grid.margins)) {
-    for (let i = 0; i < breakpoints.length; i++) {
-      const margin = $theme.grid.margins[i];
-      if (margin == null) {
-        margins.push($theme.grid.margins[$theme.grid.margins.length - 1]);
-      } else {
-        margins.push(margin);
-      }
-    }
-  } else {
-    for (let i = 0; i < breakpoints.length; i++) {
-      margins.push($theme.grid.margins);
-    }
-  }
-
-  const style: StyleObject = {
+  return {
     ...$theme.typography.font300,
+    ...getMinimumPageMargins($theme.grid.margins),
+    ...getMediaQueryPageMargins($theme),
     boxSizing: 'border-box',
     backgroundColor: $theme.colors.backgroundPrimary,
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
     borderBottomColor: `${$theme.colors.borderOpaque}`,
-    paddingInlineStart: margins[0] + 'px',
-    paddingInlineEnd: margins[0] + 'px',
   };
-
-  for (let i = 1; i < mediaQueries.length; i++) {
-    const margin = Array.isArray($theme.grid.margins)
-      ? $theme.grid.margins[i]
-      : $theme.grid.margins;
-
-    style[mediaQueries[i]] = {
-      paddingInlineStart: margin + 'px',
-      paddingInlineEnd: margin + 'px',
-    };
-  }
-
-  return style;
 });
 StyledRoot.displayName = 'StyledRoot';
 
@@ -111,7 +79,7 @@ StyledSpacing.displayName = 'StyledSpacing';
 
 export const StyledAppName = styled('div', ({ $theme }) => ({
   ...$theme.typography.font550,
-  color: $theme.colors.primary,
+  color: $theme.colors.contentPrimary,
   textDecoration: 'none',
   [$theme.mediaQuery.medium]: {
     ...$theme.typography.font650,
@@ -153,7 +121,7 @@ export const StyledMainMenuItem = styled<
   {
     $active?: boolean;
     $isFocusVisible: boolean;
-    $kind: typeof KIND[keyof typeof KIND];
+    $kind: (typeof KIND)[keyof typeof KIND];
   }
 >('div', (props) => {
   const {
@@ -171,11 +139,11 @@ export const StyledMainMenuItem = styled<
     marginRight: sizing.scale700,
     paddingTop: $kind === KIND.secondary ? sizing.scale750 : '0',
     paddingBottom: $kind === KIND.secondary ? sizing.scale750 : '0',
-    outline: $isFocusVisible ? `3px solid ${colors.accent}` : 'none',
+    outline: $isFocusVisible ? `3px solid ${colors.borderAccent}` : 'none',
     outlineOffset: '-3px',
     borderBottomWidth: '2px',
     borderBottomStyle: 'solid',
-    borderBottomColor: $active && !$isFocusVisible ? colors.primary : 'transparent',
+    borderBottomColor: $active && !$isFocusVisible ? colors.borderSelected : 'transparent',
     cursor: $active ? 'default' : 'pointer',
     whiteSpace: $kind === KIND.secondary ? 'nowrap' : 'initial',
     ':first-child': {
@@ -185,7 +153,7 @@ export const StyledMainMenuItem = styled<
       ...(direction === 'rtl' ? { marginLeft: '0' } : { marginRight: '0' }),
     },
     ':hover': {
-      color: colors.primary,
+      color: colors.contentPrimary,
     },
   };
 });

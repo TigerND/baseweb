@@ -51,7 +51,7 @@ const ViolationContainer = styled<
   }
 >('div', ({ $theme, $top, $left }) => {
   return {
-    backgroundColor: $theme.colors.mono100,
+    backgroundColor: $theme.colors.backgroundPrimary,
     boxShadow: $theme.lighting.shadow600,
     position: 'absolute',
     padding: $theme.sizing.scale400,
@@ -73,9 +73,10 @@ function Violation(props: ViolationProps) {
   React.useEffect(() => {
     const node = document.querySelector(props.target);
     if (node) {
+      // @ts-ignore
       setAnchor(node);
 
-      node.setAttribute('style', `border: solid 1px ${theme.colors.negative300};`);
+      node.setAttribute('style', `border: solid 1px ${theme.colors.borderNegative};`);
 
       node.addEventListener('mouseenter', handleMouseEnter);
       node.addEventListener('mouseleave', handleMouseLeave);
@@ -100,6 +101,7 @@ function Violation(props: ViolationProps) {
         placement={TETHER_PLACEMENT.bottom}
       >
         <ViolationContainer
+          // @ts-ignore
           ref={setPopper}
           $top={`${offset.top}px` || '0px'}
           $left={`${offset.left}px` || '0px'}
@@ -126,8 +128,10 @@ export default function A11y(props: { children: React.ReactNode }) {
       }
 
       const id = requestIdleCallback(() => {
+        // @ts-ignore
         validateNode(child.current).then(setViolations);
       });
+      // @ts-ignore
       setIdleID(id);
     }
   }, [props.children]);
